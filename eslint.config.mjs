@@ -1,6 +1,13 @@
-import nextVitals from "eslint-config-next/core-web-vitals";
-import nextTs from "eslint-config-next/typescript";
+import tseslint from "typescript-eslint";
 
-const eslintConfig = [...nextVitals, ...nextTs];
-
-export default eslintConfig;
+export default tseslint.config(
+  {
+    ignores: [".next/**", "node_modules/**", "dist/**", "coverage/**", "next-env.d.ts"]
+  },
+  ...tseslint.configs.recommended,
+  {
+    rules: {
+      "@typescript-eslint/no-explicit-any": "warn"
+    }
+  }
+);

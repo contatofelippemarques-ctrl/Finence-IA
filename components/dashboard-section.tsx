@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { AlertTriangle, ArrowDownRight, ArrowUpRight, BrainCircuit, Shield, Wallet } from "lucide-react";
 import { Area, AreaChart, Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
@@ -11,9 +12,14 @@ const colors = ["#2dd4bf", "#a78bfa", "#60a5fa", "#f59e0b", "#fb7185", "#34d399"
 
 export function DashboardSection() {
   const { dictionary, locale } = useLanguage();
+  const [mounted, setMounted] = useState(false);
   const expenses = monthlySeries.at(-1)?.expenses ?? 0;
   const income = monthlySeries.at(-1)?.income ?? 0;
   const balance = income - expenses + 14200;
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const stats = [
     { label: dictionary.dashboard.balance, value: formatCurrency(balance, locale), icon: Wallet, trend: "+8.2%", tone: "text-teal-300" },
@@ -61,39 +67,47 @@ export function DashboardSection() {
             <BrainCircuit className="h-5 w-5 text-teal-300" />
           </div>
           <div className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={monthlySeries}>
-                <defs>
-                  <linearGradient id="income" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#2dd4bf" stopOpacity={0.45} />
-                    <stop offset="95%" stopColor="#2dd4bf" stopOpacity={0} />
-                  </linearGradient>
-                  <linearGradient id="expenses" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#a78bfa" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#a78bfa" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <Tooltip contentStyle={{ background: "#0f172a", border: "1px solid rgba(255,255,255,.12)", borderRadius: 16 }} />
-                <Area type="monotone" dataKey="income" stroke="#2dd4bf" fill="url(#income)" strokeWidth={3} />
-                <Area type="monotone" dataKey="expenses" stroke="#a78bfa" fill="url(#expenses)" strokeWidth={3} />
-              </AreaChart>
-            </ResponsiveContainer>
+            {mounted ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={monthlySeries}>
+                  <defs>
+                    <linearGradient id="income" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#2dd4bf" stopOpacity={0.45} />
+                      <stop offset="95%" stopColor="#2dd4bf" stopOpacity={0} />
+                    </linearGradient>
+                    <linearGradient id="expenses" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#a78bfa" stopOpacity={0.4} />
+                      <stop offset="95%" stopColor="#a78bfa" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <Tooltip contentStyle={{ background: "#0f172a", border: "1px solid rgba(255,255,255,.12)", borderRadius: 16 }} />
+                  <Area type="monotone" dataKey="income" stroke="#2dd4bf" fill="url(#income)" strokeWidth={3} />
+                  <Area type="monotone" dataKey="expenses" stroke="#a78bfa" fill="url(#expenses)" strokeWidth={3} />
+                </AreaChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full rounded-3xl bg-white/[0.04]" />
+            )}
           </div>
         </div>
 
         <div className="glass-card rounded-3xl p-5">
           <p className="text-sm text-white/45">{dictionary.dashboard.categories}</p>
           <div className="mt-4 h-56">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie data={categorySeries} dataKey="value" innerRadius={62} outerRadius={92} paddingAngle={4}>
-                  {categorySeries.map((entry, index) => (
-                    <Cell key={entry.name} fill={colors[index % colors.length]} />
-                  ))}
-                </Pie>
-                <Tooltip contentStyle={{ background: "#0f172a", border: "1px solid rgba(255,255,255,.12)", borderRadius: 16 }} />
-              </PieChart>
-            </ResponsiveContainer>
+            {mounted ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie data={categorySeries} dataKey="value" innerRadius={62} outerRadius={92} paddingAngle={4}>
+                    {categorySeries.map((entry, index) => (
+                      <Cell key={entry.name} fill={colors[index % colors.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip contentStyle={{ background: "#0f172a", border: "1px solid rgba(255,255,255,.12)", borderRadius: 16 }} />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="mx-auto h-44 w-44 rounded-full bg-white/[0.04]" />
+            )}
           </div>
           <div className="mt-4 grid gap-2">
             {categorySeries.slice(0, 4).map((category, index) => (

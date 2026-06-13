@@ -1,4 +1,4 @@
-import type { AiTrainingEntry, Debt, FinancialProfile, Goal, Locale, PlanId, Role, Transaction } from "@/lib/types";
+import type { AiTrainingEntry, FinancialProfile, Locale, PlanId, Role, Transaction } from "@/lib/types";
 
 export const demoProfile: FinancialProfile = {
   monthlyIncome: 6200,

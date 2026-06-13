@@ -5,7 +5,7 @@ export function middleware(request: NextRequest) {
   const response = NextResponse.next();
   const existing = request.cookies.get("finance-ia-locale")?.value;
   const browserLocale = request.headers.get("accept-language")?.split(",")[0]?.split("-")[0];
-  const detected = locales.includes(browserLocale as (typeof locales)[number]) ? browserLocale : "en";
+  const detected = locales.includes(browserLocale as (typeof locales)[number]) ? browserLocale ?? "en" : "en";
 
   if (!existing) {
     response.cookies.set("finance-ia-locale", detected, {

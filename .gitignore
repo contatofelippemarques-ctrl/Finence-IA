@@ -9,4 +9,5 @@ yarn-error.log*
 pnpm-debug.log*
 dist
 coverage
+tsconfig.tsbuildinfo
 .DS_Store

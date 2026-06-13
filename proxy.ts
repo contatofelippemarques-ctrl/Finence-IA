@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { locales } from "@/lib/i18n/dictionaries";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const response = NextResponse.next();
   const existing = request.cookies.get("finance-ia-locale")?.value;
   const browserLocale = request.headers.get("accept-language")?.split(",")[0]?.split("-")[0];
